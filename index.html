@@ -30,7 +30,6 @@
             font-size: 24px; 
             font-weight: 900; 
             letter-spacing: 1px;
-            text-transform: uppercase;
         }
 
         .controls { 
@@ -162,11 +161,10 @@
     <div class="navbar">
         <div class="logo">PRINCE ANIME</div>
         <div class="controls">
-            <input type="text" id="searchInput" placeholder="Search Anime, Movies...">
+            <input type="text" id="searchInput" placeholder="Search Anime, Movies, Dubbed...">
             <select id="typeSelect">
-                <option value="all">All</option>
-                <option value="anime">Anime</option>
-                <option value="movie">Movies</option>
+                <option value="anime">Anime (HiAnime)</option>
+                <option value="movie">Movies (MovieBox)</option>
             </select>
             <select id="langSelect">
                 <option value="sub">SUB</option>
@@ -187,44 +185,74 @@
             <iframe id="videoIframe" src="" allowfullscreen></iframe>
         </div>
         <div class="server-btn-container">
-            <button class="server-btn" onclick="switchServer(1)">Server 1</button>
-            <button class="server-btn" onclick="switchServer(2)">Server 2</button>
-            <button class="server-btn" onclick="switchServer(3)">Server 3</button>
+            <button class="server-btn" onclick="switchServer(1)">Server 1 (HiAnime)</button>
+            <button class="server-btn" onclick="switchServer(2)">Server 2 (MovieBox)</button>
+            <button class="server-btn" onclick="switchServer(3)">Server 3 (AnimeWorld)</button>
         </div>
     </div>
 
     <script>
+        const TMDB_KEY = '8476a7ab80ad76f0936744dfb1d5e676';
         const resultsContainer = document.getElementById('results');
         const heading = document.getElementById('heading');
         const searchInput = document.getElementById('searchInput');
 
-        let currentMedia = { type: 'movie', id: '' };
+        let currentMedia = { type: 'anime', id: '', title: '' };
 
+        // Auto-load Trending from multiple fallback engines
         async function loadTrending() {
-            resultsContainer.innerHTML = '<div class="loading">Loading videos...</div>';
+            resultsContainer.innerHTML = '<div class="loading">Fetching latest content...</div>';
+            
+            // Engine 1: Jikan / Consumet (HiAnime)
             try {
-                // Direct Anime + Movie Scraper API (Jikan Fallback)
                 const res = await fetch('https://api.jikan.moe/v4/top/anime');
                 const data = await res.json();
-                renderAnimeCards(data.data);
-            } catch (error) {
-                resultsContainer.innerHTML = '<div class="loading">Connection Error. Please Refresh.</div>';
+                if (data.data && data.data.length > 0) {
+                    renderAnimeCards(data.data);
+                    return;
+                }
+            } catch (e) {}
+
+            // Engine 2: TMDB Fallback (MovieBox Data)
+            try {
+                const res = await fetch(`https://api.themoviedb.org/3/trending/all/week?api_key=${TMDB_KEY}`);
+                const data = await res.json();
+                renderTmdbCards(data.results);
+            } catch (e) {
+                resultsContainer.innerHTML = '<div class="loading">Failed to load content. Reload page.</div>';
             }
         }
 
         async function handleSearch() {
             let query = searchInput.value.trim();
+            const type = document.getElementById('typeSelect').value;
+            const lang = document.getElementById('langSelect').value;
+
             if (!query) return;
 
-            heading.innerText = `Results for: ${query}`;
+            if (lang === 'dub') {
+                query += ' Hindi';
+            }
+
+            heading.innerText = `Results for: ${searchInput.value.trim()}`;
             resultsContainer.innerHTML = '<div class="loading">Searching...</div>';
 
-            try {
-                const res = await fetch(`https://api.jikan.moe/v4/anime?q=${encodeURIComponent(query)}`);
-                const data = await res.json();
-                renderAnimeCards(data.data);
-            } catch (error) {
-                resultsContainer.innerHTML = '<div class="loading">Search Error. Try again.</div>';
+            if (type === 'anime') {
+                try {
+                    const res = await fetch(`https://api.jikan.moe/v4/anime?q=${encodeURIComponent(query)}`);
+                    const data = await res.json();
+                    renderAnimeCards(data.data);
+                } catch (error) {
+                    resultsContainer.innerHTML = '<div class="loading">Search error. Try again.</div>';
+                }
+            } else {
+                try {
+                    const res = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${TMDB_KEY}&query=${encodeURIComponent(query)}`);
+                    const data = await res.json();
+                    renderTmdbCards(data.results);
+                } catch (error) {
+                    resultsContainer.innerHTML = '<div class="loading">Search error. Try again.</div>';
+                }
             }
         }
 
@@ -238,7 +266,7 @@
             items.forEach(item => {
                 const title = item.title;
                 const image = item.images.jpg.image_url;
-                const malId = item.mal_id;
+                const id = item.mal_id;
 
                 if (image && title) {
                     const card = document.createElement('div');
@@ -247,7 +275,32 @@
                         <img src="${image}" alt="${title}">
                         <div class="card-title">${title}</div>
                     `;
-                    card.onclick = () => openPlayer('anime', malId, title);
+                    card.onclick = () => openPlayer('anime', id, title);
+                    resultsContainer.appendChild(card);
+                }
+            });
+        }
+
+        function renderTmdbCards(items) {
+            resultsContainer.innerHTML = '';
+            if (!items || items.length === 0) {
+                resultsContainer.innerHTML = '<div class="loading">No content found!</div>';
+                return;
+            }
+
+            items.forEach(item => {
+                const title = item.title || item.name;
+                const posterPath = item.poster_path;
+
+                if (posterPath && title) {
+                    const card = document.createElement('div');
+                    card.className = 'card';
+                    card.innerHTML = `
+                        <img src="https://image.tmdb.org/t/p/w500${posterPath}" alt="${title}">
+                        <div class="card-title">${title}</div>
+                    `;
+                    const mediaType = item.media_type || 'movie';
+                    card.onclick = () => openPlayer(mediaType, item.id, title);
                     resultsContainer.appendChild(card);
                 }
             });
@@ -261,14 +314,17 @@
 
         function switchServer(serverNum) {
             let embedUrl = '';
-            const query = encodeURIComponent(currentMedia.title);
+            const encodedTitle = encodeURIComponent(currentMedia.title);
             
             if (serverNum === 1) {
+                // HiAnime / AniWave Embed Engine
                 embedUrl = `https://2embed.org/embed/anime?id=${currentMedia.id}`;
             } else if (serverNum === 2) {
-                embedUrl = `https://vidsrc.to/embed/tv/${currentMedia.id}`;
+                // MovieBox / VidSrc Stream Engine
+                embedUrl = `https://vidsrc.to/embed/${currentMedia.type}/${currentMedia.id}`;
             } else if (serverNum === 3) {
-                embedUrl = `https://autoembed.to/anime/watch?q=${query}`;
+                // AnimeWorld Backup Engine
+                embedUrl = `https://autoembed.to/anime/watch?q=${encodedTitle}`;
             }
 
             document.getElementById('videoIframe').src = embedUrl;
