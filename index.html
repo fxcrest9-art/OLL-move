@@ -3,70 +3,115 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>I-LL-MOVE - All Movies & Anime</title>
+  <title>I-LL-MOVE - Movies & Anime World</title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { background-color: #141414; color: #fff; font-family: 'Helvetica Neue', Arial, sans-serif; }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+    body { background-color: #0f0f12; color: #fff; padding-bottom: 40px; }
     
-    .navbar { display: flex; align-items: center; justify-content: space-between; padding: 15px 4%; background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, transparent 100%); position: fixed; top: 0; width: 100%; z-index: 100; }
-    .logo { color: #e50914; font-size: 24px; font-weight: 900; letter-spacing: 1px; text-decoration: none; }
-    .nav-links { display: flex; gap: 15px; list-style: none; font-size: 14px; }
-    .nav-links a { color: #e5e5e5; text-decoration: none; }
+    .navbar { display: flex; align-items: center; justify-content: space-between; padding: 15px 4%; background: #181920; position: sticky; top: 0; z-index: 100; }
+    .logo { color: #e50914; font-size: 22px; font-weight: bold; text-decoration: none; }
+    .search-box { display: flex; gap: 8px; }
+    .search-box input { padding: 6px 12px; border-radius: 4px; border: none; outline: none; background: #2a2b36; color: #fff; }
+    .search-box button { background: #e50914; border: none; color: #fff; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; }
 
-    .hero { height: 60vh; background: linear-gradient(to top, #141414, transparent), url('https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=1000') center/cover no-repeat; display: flex; flex-direction: column; justify-content: flex-end; padding: 20px 4%; margin-bottom: 20px; }
-    .hero h1 { font-size: 32px; font-weight: bold; margin-bottom: 10px; }
-    .hero p { font-size: 14px; color: #aaa; max-width: 500px; margin-bottom: 15px; line-height: 1.4; }
-    .hero-btn { background-color: #e50914; color: white; border: none; padding: 10px 20px; font-size: 16px; font-weight: bold; border-radius: 4px; cursor: pointer; width: fit-content; }
-
-    .section { padding: 0 4% 30px; }
-    .section-title { font-size: 18px; margin-bottom: 12px; font-weight: 600; }
-    .movie-row { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none; }
-    .movie-row::-webkit-scrollbar { display: none; }
+    .container { padding: 20px 4%; }
+    .section-title { font-size: 18px; margin: 15px 0; color: #e50914; }
     
-    .card { flex: 0 0 130px; background: #222; border-radius: 4px; overflow: hidden; transition: transform 0.2s; cursor: pointer; }
-    .card:hover { transform: scale(1.05); }
-    .card img { width: 100%; height: 180px; object-fit: cover; display: block; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; }
+    .card { background: #181920; border-radius: 6px; overflow: hidden; cursor: pointer; transition: 0.2s; }
+    .card:hover { transform: scale(1.04); }
+    .card img { width: 100%; height: 180px; object-fit: cover; }
     .card-title { font-size: 12px; padding: 8px; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    /* Embed Hotlink Player Modal */
+    .player-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 1000; justify-content: center; align-items: center; flex-direction: column; }
+    .player-container { width: 95%; max-width: 800px; aspect-ratio: 16/9; background: #000; position: relative; }
+    iframe { width: 100%; height: 100%; border: none; }
+    .close-btn { position: absolute; top: -35px; right: 0; color: #fff; font-size: 24px; cursor: pointer; font-weight: bold; }
   </style>
 </head>
 <body>
 
   <div class="navbar">
     <a href="#" class="logo">I-LL-MOVE</a>
-    <ul class="nav-links">
-      <li><a href="#">Home</a></li>
-      <li><a href="#">Movies</a></li>
-      <li><a href="#">Anime</a></li>
-    </ul>
-  </div>
-
-  <div class="hero">
-    <h1>All Movies & Anime</h1>
-    <p>Watch trending movies and anime shows. Mobile responsive UI setup testing.</p>
-    <button class="hero-btn">▶ Play Now</button>
-  </div>
-
-  <div class="section">
-    <h2 class="section-title">Trending Now</h2>
-    <div class="movie-row">
-      <div class="card">
-        <img src="https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?q=80&w=300" alt="Movie">
-        <div class="card-title">Sample Movie 1</div>
-      </div>
-      <div class="card">
-        <img src="https://images.unsplash.com/photo-1518676599625-583566160350?q=80&w=300" alt="Movie">
-        <div class="card-title">Sample Movie 2</div>
-      </div>
-      <div class="card">
-        <img src="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=300" alt="Movie">
-        <div class="card-title">Sample Movie 3</div>
-      </div>
-      <div class="card">
-        <img src="https://images.unsplash.com/photo-1535016120720-40c646be5580?q=80&w=300" alt="Movie">
-        <div class="card-title">Sample Movie 4</div>
-      </div>
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Search Movie / Anime...">
+      <button onclick="searchContent()">Search</button>
     </div>
   </div>
 
+  <div class="container">
+    <h2 class="section-title" id="heading">Trending Movies & Anime World</h2>
+    <div class="grid" id="contentGrid"></div>
+  </div>
+
+  <!-- Player Modal for Hotlinking Streams -->
+  <div class="player-modal" id="playerModal">
+    <div class="player-container">
+      <span class="close-btn" onclick="closePlayer()">✕ Close Player</span>
+      <iframe id="videoPlayer" src="" allowfullscreen></iframe>
+    </div>
+  </div>
+
+  <script>
+    const API_KEY = '3fd2be6f0c70a2a598f084dd23308883';
+    const grid = document.getElementById('contentGrid');
+    const playerModal = document.getElementById('playerModal');
+    const videoPlayer = document.getElementById('videoPlayer');
+
+    async function loadTrending() {
+      const res = await fetch(`https://api.themoviedb.org/3/trending/all/day?api_key=${API_KEY}`);
+      const data = await res.json();
+      renderCards(data.results);
+    }
+
+    async function searchContent() {
+      const query = document.getElementById('searchInput').value;
+      if (!query) return;
+      document.getElementById('heading').innerText = `Results for: ${query}`;
+      const res = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(query)}`);
+      const data = await res.json();
+      renderCards(data.results);
+    }
+
+    function renderCards(items) {
+      grid.innerHTML = '';
+      items.forEach(item => {
+        if (!item.poster_path) return;
+        const title = item.title || item.name;
+        const type = item.media_type || (item.first_air_date ? 'tv' : 'movie');
+
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <img src="https://image.tmdb.org/t/p/w500${item.poster_path}" alt="${title}">
+          <div class="card-title">${title}</div>
+        `;
+        card.onclick = () => playHotlinkStream(item.id, type);
+        grid.appendChild(card);
+      });
+    }
+
+    // Anime World & Movie Hotlinking Mechanism
+    function playHotlinkStream(id, type) {
+      let embedUrl = '';
+      if (type === 'tv') {
+        // Hotlink stream source for Anime/TV Series
+        embedUrl = `https://vidsrc.me/embed/tv?tmdb=${id}&season=1&episode=1`;
+      } else {
+        // Hotlink stream source for Movies
+        embedUrl = `https://vidsrc.me/embed/movie?tmdb=${id}`;
+      }
+      videoPlayer.src = embedUrl;
+      playerModal.style.display = 'flex';
+    }
+
+    function closePlayer() {
+      playerModal.style.display = 'none';
+      videoPlayer.src = '';
+    }
+
+    loadTrending();
+  </script>
 </body>
 </html>
