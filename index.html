@@ -3,25 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prince Anime - Watch Free Anime & Movies</title>
+    <title>PRINCE ANIME</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
-        /* Netflix Style Dark Red Theme */
         body { 
             background: #141414; 
             color: #ffffff; 
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-family: Arial, sans-serif;
             overflow-x: hidden;
         }
 
-        /* Navbar Layout */
         .navbar { 
             display: flex; 
             align-items: center; 
             justify-content: space-between; 
             padding: 15px 4%; 
-            background: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 100%), #000;
+            background: #000000;
             position: sticky; top: 0;
             z-index: 100;
             flex-wrap: wrap; gap: 10px;
@@ -38,62 +36,45 @@
         .controls { 
             display: flex; 
             gap: 8px; 
-            width: 100%; max-width: 650px;
+            width: 100%; max-width: 600px;
             flex-wrap: wrap;
         }
 
         .controls input, .controls select { 
-            padding: 9px 14px; 
+            padding: 9px 12px; 
             border-radius: 4px; 
             border: 1px solid #333; 
-            background: rgba(0,0,0,0.75); 
+            background: #1f1f1f; 
             color: #fff; 
             font-size: 13px;
             outline: none;
         }
 
-        .controls input { flex: 2; min-width: 150px; }
-        .controls select { flex: 1; min-width: 90px; }
+        .controls input { flex: 2; min-width: 140px; }
+        .controls select { flex: 1; min-width: 80px; }
 
         .controls button { 
             background: #E50914; 
             color: #fff; 
             border: none; 
-            padding: 9px 20px; 
+            padding: 9px 18px; 
             border-radius: 4px; 
             cursor: pointer; 
             font-weight: bold; 
-            transition: 0.2s;
         }
 
-        .controls button:hover { background: #b81d24; }
-
-        /* Crunchyroll Style Feature Tags */
-        .feature-bar {
-            display: flex;
-            gap: 15px;
-            padding: 10px 4%;
-            background: #1f1f1f;
-            font-size: 12px;
-            color: #aaa;
-            border-bottom: 1px solid #2a2a2a;
-        }
-
-        .feature-bar span { color: #f57c00; font-weight: bold; }
-
-        /* Netflix Content Grid */
         .container { padding: 20px 4%; }
         
         .section-title { 
             font-size: 20px; 
             margin-bottom: 15px; 
-            color: #e5e5e5; 
+            color: #ffffff; 
             font-weight: bold;
         }
 
         .grid { 
             display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); 
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); 
             gap: 15px; 
         }
 
@@ -103,19 +84,18 @@
             overflow: hidden; 
             text-align: center; 
             cursor: pointer; 
-            transition: transform 0.3s ease;
-            position: relative;
+            transition: transform 0.2s;
         }
 
-        .card:hover { transform: scale(1.05); z-index: 10; }
+        .card:hover { transform: scale(1.04); }
 
-        .card img { width: 100%; height: 210px; object-fit: cover; }
+        .card img { width: 100%; height: 200px; object-fit: cover; }
         
         .card-title { 
             font-size: 12px; 
             padding: 8px; 
             font-weight: 500; 
-            height: 45px; 
+            height: 40px; 
             display: flex; 
             align-items: center; 
             justify-content: center;
@@ -125,12 +105,11 @@
         .loading { 
             text-align: center; 
             font-size: 16px; 
-            color: #888; 
+            color: #aaa; 
             margin-top: 30px; 
             grid-column: 1 / -1; 
         }
 
-        /* Player Window (Crunchyroll/Netflix Overlay) */
         .modal { 
             display: none; 
             position: fixed; 
@@ -144,13 +123,12 @@
         }
 
         .modal-content { 
-            width: 95%; max-width: 900px; 
-            height: 500px; 
+            width: 95%; max-width: 850px; 
+            height: 480px; 
             background: #000; 
             position: relative; 
             border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 0 20px rgba(229, 9, 20, 0.5);
         }
 
         .close-btn { 
@@ -161,7 +139,7 @@
         }
 
         .server-btn-container {
-            margin-top: 12px;
+            margin-top: 10px;
             display: flex;
             gap: 10px;
         }
@@ -170,13 +148,11 @@
             background: #222;
             color: #fff;
             border: 1px solid #444;
-            padding: 8px 14px;
+            padding: 6px 12px;
             border-radius: 4px;
             cursor: pointer;
             font-size: 12px;
         }
-
-        .server-btn:hover { background: #E50914; border-color: #E50914; }
 
         iframe { width: 100%; height: 100%; border: none; }
     </style>
@@ -184,12 +160,12 @@
 <body>
 
     <div class="navbar">
-        <div class="logo">Prince Anime</div>
+        <div class="logo">PRINCE ANIME</div>
         <div class="controls">
-            <input type="text" id="searchInput" placeholder="Search Anime, Movies, K-Drama...">
+            <input type="text" id="searchInput" placeholder="Search Anime, Movies...">
             <select id="typeSelect">
-                <option value="all">All Catalog</option>
-                <option value="tv">Anime & Series</option>
+                <option value="all">All</option>
+                <option value="anime">Anime</option>
                 <option value="movie">Movies</option>
             </select>
             <select id="langSelect">
@@ -200,77 +176,59 @@
         </div>
     </div>
 
-    <div class="feature-bar">
-        <div><span>Crunchyroll Engine:</span> Sub & Dub Support</div>
-        <div><span>Netflix Layout:</span> Ultra Dark UI</div>
-        <div><span>MovieBox Stream:</span> Multi-Server Switching</div>
-    </div>
-
     <div class="container">
         <div class="section-title" id="heading">Trending Now</div>
         <div id="results" class="grid"></div>
     </div>
 
-    <!-- Video Player Overlay -->
     <div id="playerModal" class="modal">
         <div class="modal-content">
             <span class="close-btn" onclick="closePlayer()">&times;</span>
             <iframe id="videoIframe" src="" allowfullscreen></iframe>
         </div>
         <div class="server-btn-container">
-            <button class="server-btn" onclick="switchServer(1)">Server 1 (Fast)</button>
-            <button class="server-btn" onclick="switchServer(2)">Server 2 (HD)</button>
-            <button class="server-btn" onclick="switchServer(3)">Server 3 (Backup)</button>
+            <button class="server-btn" onclick="switchServer(1)">Server 1</button>
+            <button class="server-btn" onclick="switchServer(2)">Server 2</button>
+            <button class="server-btn" onclick="switchServer(3)">Server 3</button>
         </div>
     </div>
 
     <script>
-        const TMDB_KEY = '3fd2be6f0c7aa2598f0022221c565c6f';
         const resultsContainer = document.getElementById('results');
         const heading = document.getElementById('heading');
         const searchInput = document.getElementById('searchInput');
 
-        let currentMedia = { type: '', id: '' };
+        let currentMedia = { type: 'movie', id: '' };
 
         async function loadTrending() {
-            resultsContainer.innerHTML = '<div class="loading">Loading Prince Anime Catalog...</div>';
+            resultsContainer.innerHTML = '<div class="loading">Loading videos...</div>';
             try {
-                const res = await fetch(`https://api.themoviedb.org/3/trending/all/week?api_key=${TMDB_KEY}`);
+                // Direct Anime + Movie Scraper API (Jikan Fallback)
+                const res = await fetch('https://api.jikan.moe/v4/top/anime');
                 const data = await res.json();
-                renderCards(data.results);
+                renderAnimeCards(data.data);
             } catch (error) {
-                resultsContainer.innerHTML = '<div class="loading">Unable to fetch content.</div>';
+                resultsContainer.innerHTML = '<div class="loading">Connection Error. Please Refresh.</div>';
             }
         }
 
         async function handleSearch() {
             let query = searchInput.value.trim();
-            const type = document.getElementById('typeSelect').value;
-            const lang = document.getElementById('langSelect').value;
-
             if (!query) return;
 
-            if (lang === 'dub') {
-                query += ' Hindi';
-            }
-
-            heading.innerText = `Results for: ${searchInput.value.trim()}`;
+            heading.innerText = `Results for: ${query}`;
             resultsContainer.innerHTML = '<div class="loading">Searching...</div>';
 
             try {
-                let url = `https://api.themoviedb.org/3/search/multi?api_key=${TMDB_KEY}&query=${encodeURIComponent(query)}`;
-                if (type !== 'all') {
-                    url = `https://api.themoviedb.org/3/search/${type}?api_key=${TMDB_KEY}&query=${encodeURIComponent(query)}`;
-                }
-                const res = await fetch(url);
+                const res = await fetch(`https://api.jikan.moe/v4/anime?q=${encodeURIComponent(query)}`);
                 const data = await res.json();
-                renderCards(data.results);
+                renderAnimeCards(data.data);
             } catch (error) {
-                resultsContainer.innerHTML = '<div class="loading">Search error. Try again.</div>';
+                resultsContainer.innerHTML = '<div class="loading">Search Error. Try again.</div>';
             }
         }
 
-        function renderCards(items) {
+        function renderAnimeCards(items) {
             resultsContainer.innerHTML = '';
             if (!items || items.length === 0) {
                 resultsContainer.innerHTML = '<div class="loading">No content found!</div>';
@@ -278,40 +236,39 @@
             }
 
             items.forEach(item => {
-                const title = item.title || item.name;
-                const posterPath = item.poster_path;
+                const title = item.title;
+                const image = item.images.jpg.image_url;
+                const malId = item.mal_id;
 
-                if (posterPath && title) {
+                if (image && title) {
                     const card = document.createElement('div');
                     card.className = 'card';
                     card.innerHTML = `
-                        <img src="https://image.tmdb.org/t/p/w500${posterPath}" alt="${title}">
+                        <img src="${image}" alt="${title}">
                         <div class="card-title">${title}</div>
                     `;
-                    
-                    const type = item.media_type || (item.first_air_date ? 'tv' : 'movie');
-                    card.onclick = () => openPlayer(type, item.id);
+                    card.onclick = () => openPlayer('anime', malId, title);
                     resultsContainer.appendChild(card);
                 }
             });
         }
 
-        function openPlayer(type, id) {
-            currentMedia = { type, id };
+        function openPlayer(type, id, title) {
+            currentMedia = { type, id, title };
             switchServer(1);
             document.getElementById('playerModal').style.display = 'flex';
         }
 
         function switchServer(serverNum) {
-            const { type, id } = currentMedia;
             let embedUrl = '';
+            const query = encodeURIComponent(currentMedia.title);
             
             if (serverNum === 1) {
-                embedUrl = `https://vidsrc.to/embed/${type}/${id}`;
+                embedUrl = `https://2embed.org/embed/anime?id=${currentMedia.id}`;
             } else if (serverNum === 2) {
-                embedUrl = `https://vidsrc.me/embed/${type}?tmdb=${id}`;
+                embedUrl = `https://vidsrc.to/embed/tv/${currentMedia.id}`;
             } else if (serverNum === 3) {
-                embedUrl = `https://multiembed.mov/?video_id=${id}&tmdb=1`;
+                embedUrl = `https://autoembed.to/anime/watch?q=${query}`;
             }
 
             document.getElementById('videoIframe').src = embedUrl;
